@@ -8,24 +8,49 @@ GAME RULES:
 - The first player to reach 100 points on GLOBAL score wins the game
 
 */
-let scores, currentPlayer, roundScore;
+function init(){
+    let scores, currentPlayer, roundScore;
+    scores = [0, 0];
+    activePlayer = 0;
+    roundScore = 0;
 
-scores = [0, 0];
-activePlayer = 0;
-roundScore = 0;
+    document.querySelector(".dice").style.display = "none";
 
-//dice = Math.ceil(Math.random() * 6);
-//document.querySelector("#current-" + activePlayer).textContent = dice;
+    document.getElementById("score-0").textContent = "0";
+    document.getElementById("score-1").textContent = "0";
+    
+    document.getElementById("current-0").textContent = "0";
+    document.getElementById("current-1").textContent = "0";
 
-document.querySelector(".dice").style.display = "none";
+    document.getElementById("name-0").textContent = "Player-1";
+    document.getElementById("name-1").textContent = "Player-2";
 
-document.getElementById("score-0").textContent = "0";
-document.getElementById("score-1").textContent = "0";
-document.getElementById("current-0").textContent = "0";
-document.getElementById("current-1").textContent = "0";
+    document.querySelector(".player-0-panel").classList.remove("active");
+    document.querySelector(".player-1-panel").classList.remove("active");
 
+    document.querySelector(".player-0-panel").classList.remove("winner");
+    document.querySelector(".player-1-panel").classList.remove("winner");
+    document.querySelector(".player-0-panel").classList.add("winner");
+}
 
-document.querySelector(".btn-roll").addEventListener("click", function(){
+function nextPlayer(){
+    activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
+    roundScore = 0;
+
+    document.querySelector("#current-" + activePlayer).textContent = "0";
+    document.getElementById("current-" + activePlayer).textContent = "0";
+
+    document.querySelector(".player-0-panel").classList.toggle("active");
+    document.querySelector(".player-1-panel").classList.toggle("active");
+        //document.querySelector(".player-0-panel").classList.add("active");
+        //document.querySelector(".player-0-panel").classList.remove("active"); 
+    document.querySelector(".dice").style.display = "none";
+
+} 
+
+init();
+
+document.querySelector(".btn-roll").addEventListener("click", function() {
     let dice;
     dice = Math.ceil(Math.random() * 6);
 
@@ -40,37 +65,23 @@ document.querySelector(".btn-roll").addEventListener("click", function(){
         document.querySelector("#current-" + activePlayer).textContent = roundScore;
     } else {
         document.querySelector("#score-" + activePlayer).textContent = scores[activePlayer];
-        document.querySelector("#current-" + activePlayer).textContent = 0;
-        activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
-        roundScore = 0;
-        document.getElementById("current-" + activePlayer).textContent = "0";
-        document.querySelector(".player-0-panel").classList.toggle("active");
-        document.querySelector(".player--panel").classList.toggle("active");
-        document.querySelector(".dice").style.display = "none";
+        nextPlayer()
 
-        //document.querySelector(".player-0-panel").classList.remove("active")
-        //document.querySelector(".player-0-panel").classList.remove("active")
     }
-})
+});
 
 
 
-
-
-document.querySelector(".btn-hold").addEventListener("click", function(){
+document.querySelector(".btn-hold").addEventListener("click", function() {
     scores[activePlayer] += roundScore;
-    if(scores[activePlayer] >= 120){
-        document.getElementById("name-" + activePlayer).textContent = "The winner";
-        document.getElementById("score-0").textContent = "0";
-        document.getElementById("score-1").textContent = "0";
-        document.getElementById("current-0").textContent = "0";
-        document.getElementById("current-1").textContent = "0";
-    }
-    activePlayer === 0 ? activePlayer = 1 : activePlayer = 0;
-    document.querySelector(".player-0-panel").classList.toggle("active");
-    document.querySelector(".player--panel").classList.toggle("active");
-})
 
-document.querySelector(".btn-new").addEventListener("click", function(){
+    if(scores[activePlayer] >= 100){
+        document.getElementById("name-" + activePlayer).textContent = "you won";
+        document.querySelector(".player-" + activePlayer + "-panel").classList.add("winner");
+        document.querySelector(".player-" + activePlayer + "-panel").classList.remove("winner");
+    } else {
+        nextPlayer();
+    }    
+});
 
-})
+document.querySelector(".btn-new").addEventListener("click", init);
